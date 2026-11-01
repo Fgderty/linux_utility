@@ -66,18 +66,14 @@ push rbp
 mov rbp, rsp
 
 mov rsi, rdi
-xor edx, edx
-jmp .loop
-
-.loop:
-cmp byte [rsi], 0x00
-je .end
-inc edx
-inc rsi
-jmp .loop
+xor eax, eax
+mov rcx, 0xFFFFFFFF
+repne scasb
+sub rdi, rsi
+dec rdi
 
 .end:
-mov rax, rdx
+mov rax, rdi
 mov rsp, rbp
 pop rbp
 ret
