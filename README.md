@@ -1,69 +1,30 @@
-Ассемблерные утилиты (x86-64 Linux)
+# Linux System Utilities (x86-64 Assembly)
 
-Коллекция базовых системных утилит, написанных с нуля на языке ассемблера (NASM) для архитектуры x86-64 под Linux.
+A collection of basic Linux system utilities written entirely from scratch in x86-64 Assembly (NASM) without using standard C libraries (libc). 
 
-О проекте
+Every utility communicates directly with the Linux kernel using system calls (`syscall`), demonstrating a deep understanding of the x86-64 ABI, stack frames, and register allocation.
 
-Этот репозиторий создан в рамках изучения низкоуровневого программирования и принципа Zero Trust. Вместо использования готовых бинарников и тяжеловесных библиотек (libc), каждая утилита напрямую обращается к ядру операционной системы через системные вызовы (syscalls).
+## 🛠️ Implemented Utilities
+* **cat** — reads and outputs file contents.
+* **ls** — lists directory contents (uses `getdents64` syscall).
+* **rm** — removes a file (`unlink`).
+* **mkdir / rmdir** — creates and removes directories.
+* **touch** — creates an empty file.
+* **cp** — copies files.
+* **echo** — prints text to stdout.
+* **clear** — clears the terminal screen using ANSI escape sequences.
 
-Цели проекта:
+## ⚙️ Requirements
+* Linux x86-64
+* NASM assembler
+* GNU ld (linker)
+* GNU Make
 
-· Практическое освоение системных вызовов Linux (open, read, write, close, unlink, mkdir и др.).
-· Понимание работы стека, регистров и ABI на уровне процессора.
-· Создание собственного, полностью контролируемого набора инструментов для будущей экосистемы.
-
-Требования
-
-Для сборки и запуска вам понадобятся:
-
-· ОС Linux (x86-64)
-· Ассемблер NASM
-· Линкер ld (входит в пакет binutils)
-
-Как собрать и запустить
-
-Каждая утилита собирается двумя командами. На примере mycat:
-
+## 🚀 Build & Run
+The project uses a `Makefile` for automated compilation.
 ```bash
-nasm -f elf64 mycat.asm -o mycat.o
-ld mycat.o -o mycat
-```
+# Build all utilities at once
+make
 
-Запуск:
-
-```bash
-./mycat <аргументы>
-```
-
-Реализованные утилиты
-
-(Список будет пополняться)
-
-· mycat — чтение файла и вывод его содержимого в stdout.
-· myrm — удаление файла.
-· myecho — вывод переданных аргументов в stdout.
-· myclear — очистка экрана терминала с помощью escape-последовательностей ANSI.
-· mytouch — создание пустого файла.
-· (и так далее...)
-
-Принцип работы (Архитектура)
-
-Каждая утилита представляет собой ELF-файл с точкой входа _start.
-
-· Аргументы командной строки читаются напрямую из стека (rsp).
-· Обмен данными с ядром происходит исключительно через регистры процессора (RAX — номер вызова, RDI/RSI/RDX — аргументы).
-· Внешние зависимости отсутствуют.
-
-Планы по развитию
-
-☐ Добавление утилит для работы с директориями (ls, mkdir, rmdir).
-☐ Реализация простого поиска по файлам.
-☐ Базовая обфускация кода (NOP-slides, XOR-шифрование строк).
-
----
-
-Сделано с любовью к низкому уровню и регистрам
-
-Minimalistic Linux utilities written in pure x86-64 NASM without libc.
-Implemented: cat, rm, echo, clear, touch.
-Build: nasm -f elf64 <file>.asm -o <file>.o && ld <file>.o -o <file>
+# Clean up compiled binaries and object files
+make clean
